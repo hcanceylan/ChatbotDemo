@@ -4,8 +4,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 import numpy as np
 import csv
-import win32file
-import win32pipe
+
 
 def createBagOfWords(sentence): #Input cümlesinden anahtar kelimeleri alan fonksiyon
     
@@ -101,26 +100,10 @@ if __name__ == "__main__":
 
 
     while True:
-        pipe = win32pipe.CreateNamedPipe(
-        r'\\.\pipe\Chatbox',
-        win32pipe.PIPE_ACCESS_DUPLEX,
-        win32pipe.PIPE_TYPE_MESSAGE | win32pipe.PIPE_READMODE_MESSAGE | win32pipe.PIPE_WAIT,
-        1, 65536, 65536,
-        0,
-        None)
+        sentence = input("Enter your sentence (For exit, press e ): ")
         
-        
-        print("waiting for client")
-        win32pipe.ConnectNamedPipe(pipe, None)
-        print("got client")
-
-      
-        data = win32file.ReadFile(pipe,4096)
-        getStr = str(data[1])
-        endIndex = getStr[2:].find("\\")
-            
-        sentence = getStr[2:endIndex+2]
-        print(sentence)
+        if sentence == 'e' or sentence == 'E':
+            break
     
         dictionaryDataset = {}
         
@@ -169,7 +152,5 @@ if __name__ == "__main__":
             writer.writerow([" ".join(BagOfWords),list(dictionaryDataset.values())[indexRes]] )
             a_file.close()
             
-        result = str.encode(f"{list(dictionaryDataset.values())[indexRes]}")     
-        win32file.WriteFile(pipe, result)    
-        win32file.CloseHandle(pipe)
+        
     
